@@ -37,7 +37,8 @@ class TestConvert:
     
         shape = array_image.shape
         array_image = array_image.reshape(shape[0],shape[1])
-        tensor_min, tensor_max = np.min(array_image), np.max(array_image)
+        tensor_min = np.min(array_image)
+        tensor_max = np.max(array_image)
         array_image = self.scale(array_image, min, max)
         array_image = np.clip(array_image , min, max)
         
