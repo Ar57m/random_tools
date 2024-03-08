@@ -8,9 +8,6 @@ class TestConvert:
     def __init__(self):
         print("TestConvert On")
 
-    def tohex(self, column):
-        return np.vectorize(hex)(column)
-
     def scale(self, input_tensor, new_min, new_max):
         current_min = np.min(input_tensor)
         current_max = np.max(input_tensor)
@@ -22,7 +19,7 @@ class TestConvert:
     def image_to_tensor(self, image_path, min, max, dtype= torch.float32):
         img = Image.open(image_path)
     
-        array_image = np.array(img)
+        array_image = np.array(img).astype(np.int64)
     
     
         if array_image.ndim != 3:
@@ -57,20 +54,16 @@ class TestConvert:
         array_image = np.round(array_image).astype(np.int64)
         hexa =None
 
-        hexa =  np.apply_along_axis(self.tohex, axis=1, arr=array_image)
+        hexa = array_image
         del array_image
     
         hexa_flat = hexa.reshape(-1)
         del hexa
         cor_rgb_flat = np.zeros((hexa_flat.size, 3), dtype=np.int64)
-    
-        for i, hex_value in enumerate(hexa_flat):
-            hex_value = hex_value[2:].zfill(6)
-    
-            cor_rgb_flat[i, 0] = int(hex_value[0:2],16)
-            cor_rgb_flat[i, 1] = int(hex_value[2:4], 16)
-            cor_rgb_flat[i, 2] = int(hex_value[4:6], 16)
-    
+        cor_rgb_flat[:, 0] = (hexa_flat >> 16) & 0xFF
+        cor_rgb_flat[:, 1] = (hexa_flat >> 8) & 0xFF
+        cor_rgb_flat[:, 2] = hexa_flat & 0xFF
+      
         del hexa_flat
     
         cor_rgb = cor_rgb_flat.reshape(shape[0], shape[1], 3).astype(np.uint8)
@@ -83,7 +76,7 @@ class TestConvert:
         imag.save(f'{imgname}.png')
         print('Image saved to:' , f'{imgname}.png' )
 
-
+# For testing
 convert = TestConvert()
 k = convert.image_to_tensor("/storage/emulated/0/star.png", 0, 1)
 
