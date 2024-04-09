@@ -12,7 +12,7 @@ I used it to convert an array of prime numbers to midi, for better song I recomm
 <br>
 <br>
 ## sine_compression.py
-It's not very otimized, but it tries to fuse two arrays in one and retrieve an approximation of both, I used a very high frequency sine function on it.
+It's not very otimized and currently is converting to float64(which makes it not a compression), but it tries to fuse two arrays in one and retrieve an approximation of both, I used a very high frequency sine function on it.
 <br>
 <br>
 <br>
